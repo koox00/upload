@@ -23,6 +23,17 @@ export default class Uploader extends React.Component {
     if (this.props.uploadOnSelection) this.handleUpload(files);
   }
 
+  handleReset() {
+    this.setState({
+      response: null,
+      status: null,
+      error: null,
+      aborted: null,
+      complete: false,
+      progress: 0,
+    });
+  }
+
   handleUpload(files = this.state.files) {
     let { progress } = this.state;
     let { request, onComplete, reset } = this.props;
@@ -46,15 +57,6 @@ export default class Uploader extends React.Component {
       if (error) return this.setState({ error, response, status });
       if (aborted) return this.setState({ aborted });
       if (onComplete) onComplete({ response, status });
-      if (reset)
-        return this.setState({
-          response: null,
-          status: null,
-          error: null,
-          aborted: null,
-          complete: false,
-          progress: 0,
-        });
       this.setState({ response, status, complete: true });
     });
   }
@@ -66,6 +68,7 @@ export default class Uploader extends React.Component {
       ...this.state,
       onFiles: files => this.handleFiles(files),
       startUpload: () => this.handleUpload(),
+      onReset: () => this.handleReset(),
     });
   }
 }
